@@ -8,25 +8,14 @@ st.markdown("# Similarity Search")
 st.sidebar.header("Similarity Search")
 st.write(
     """This page allows you to search for similar images within your data. 
-    Remove duplicates to improve the quality of your dataset"""
+    Remove duplicates to improve the quality of your dataset."""
 )
+st.write("""First you need to enter the local path to your dataset. \n
+    |-my_images
+    |--image_1.png
+    |--image_2.jpg
+    |--image_3.jpeg""")
 
-progress_bar = st.sidebar.progress(0)
-status_text = st.sidebar.empty()
-last_rows = np.random.randn(1, 1)
-chart = st.line_chart(last_rows)
-
-for i in range(1, 101):
-    new_rows = last_rows[-1, :] + np.random.randn(5, 1).cumsum(axis=0)
-    status_text.text("%i%% Complete" % i)
-    chart.add_rows(new_rows)
-    progress_bar.progress(i)
-    last_rows = new_rows
-    time.sleep(0.05)
-
-progress_bar.empty()
-
-# Streamlit widgets automatically run the script from top to bottom. Since
-# this button is not connected to any other logic, it just causes a plain
-# rerun.
-st.button("Re-run")
+with st.form("s3_path"):
+    local_image_path = st.text_input("Enter a valid local path here:")
+    submit_button_image_path = st.form_submit_button("Import Images")
