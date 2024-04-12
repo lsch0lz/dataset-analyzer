@@ -1,6 +1,6 @@
 import streamlit as st
-import time
-import numpy as np
+
+from utils.similarity_search.dataloader import DataLoader
 
 st.set_page_config(page_title="Similarity Search", page_icon="📈")
 
@@ -19,3 +19,7 @@ st.write("""First you need to enter the local path to your dataset. \n
 with st.form("s3_path"):
     local_image_path = st.text_input("Enter a valid local path here:")
     submit_button_image_path = st.form_submit_button("Import Images")
+
+if submit_button_image_path:
+    for image in DataLoader(image_path=local_image_path).get_similar_images():
+        st.image(image)
