@@ -1,10 +1,13 @@
 import os
 from typing import List
 
+from utils.similarity_search.similarity_scorer import SimilarityScorer
+
 
 class DataLoader:
-    def __init__(self, image_path):
+    def __init__(self, image_path: str, similarity_threshold: int):
         self.image_path = image_path if image_path.endswith("/") else image_path + "/"
+        self.similarity_threshold = similarity_threshold
 
     def get_similar_images(self) -> List[str]:
         image_paths: List = []
@@ -13,8 +16,9 @@ class DataLoader:
             image_paths.append(image_path)
 
         cleaned_image_paths: List[str] = self._remove_non_image_paths(image_paths)
+        similar_image_paths: List[str] = SimilarityScorer(cleaned_image_paths, self.similarity_threshold).get_images_w_similar_score()
 
-        return cleaned_image_paths
+        return similar_image_paths
 
     @staticmethod
     def _remove_non_image_paths(image_paths: List[str]) -> List[str]:
