@@ -1,6 +1,7 @@
 import streamlit as st
 
 from utils.similarity_search.dataloader import DataLoader
+from utils.similarity_search.model import SimilarImages
 
 st.set_page_config(page_title="Similarity Search", page_icon="📈")
 
@@ -35,8 +36,9 @@ if submit_button_image_path:
 
 # Display images if they are loaded
 if st.session_state.loaded_images:
-    for image in DataLoader(image_path=local_image_path, similarity_threshold=similarity_threshold).get_similar_images():
+    similar_images: SimilarImages = DataLoader(image_path=local_image_path, similarity_threshold=similarity_threshold).get_similar_images()
+    for similar_image in similar_images.similar_images:
         with col1:
-            st.image(image[0])
+            st.image(similar_image.image1_path)
         with col2:
-            st.image(image[1])
+            st.image(similar_image.image2_path)
