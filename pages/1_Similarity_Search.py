@@ -1,6 +1,5 @@
 import streamlit as st
-
-from utils.similarity_search.dataloader import DataLoader
+from utils.similarity_search.dataloader import DataLoader, filter_images_based_on_threshold
 from utils.similarity_search.model import SimilarImages
 
 st.set_page_config(page_title="Similarity Search", page_icon="📈")
@@ -22,22 +21,22 @@ col1, col2 = st.columns(2)
 if "loaded_images" not in st.session_state:
     st.session_state.loaded_images = False
 
-if "similarity_threshold" not in st.session_state:
-    st.session_state.similarity_threshold = 0
+if "similar_images" not in st.session_state:
+    st.session_state.similar_images = None
 
 with st.form("s3_path"):
     local_image_path = st.text_input("Enter a valid local path here:")
     submit_button_image_path = st.form_submit_button("Import Images")
 
-similarity_threshold = st.sidebar.slider("Similarity Threshold", min_value=0.0, max_value=1.0, step=0.1, key="similarity_threshold")
+similarity_threshold = st.sidebar.slider("Similarity Threshold", min_value=0.0, max_value=1.0, step=0.01, key="similarity_threshold")
 
 if submit_button_image_path:
     st.session_state.loaded_images = True
+    st.session_state.similar_images = DataLoader(image_path=local_image_path, similarity_threshold=similarity_threshold).get_similar_images()
 
-# Display images if they are loaded
-if st.session_state.loaded_images:
-    similar_images: SimilarImages = DataLoader(image_path=local_image_path, similarity_threshold=similarity_threshold).get_similar_images()
-    for similar_image in similar_images.similar_images:
+if st.session_state.similar_images is not None:
+    filtered_images = filter_images_based_on_threshold(st.session_state.similar_images, similarity_threshold)
+    for similar_image in filtered_images.similar_images:
         with col1:
             st.image(similar_image.image1_path)
         with col2:

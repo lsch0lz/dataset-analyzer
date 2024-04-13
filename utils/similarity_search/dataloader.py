@@ -19,18 +19,8 @@ class DataLoader:
 
         cleaned_image_paths: List[str] = self._remove_non_image_paths(image_paths)
         similar_image_paths: SimilarImages = SimilarityScorer(cleaned_image_paths, self.similarity_threshold).get_images_w_similar_score()
-        filtered_similar_image_paths: SimilarImages = self._filter_images_based_on_threshold(similar_image_paths)
 
-        return filtered_similar_image_paths
-
-    def _filter_images_based_on_threshold(self, similar_images: SimilarImages):
-        filtered_similar_images: SimilarImages = SimilarImages(similar_images=[])
-        for similar_image in similar_images.similar_images:
-            if similar_image.similarity_score >= self.similarity_threshold:
-                filtered_similar_images.similar_images.append(similar_image)
-
-        return filtered_similar_images
-
+        return similar_image_paths
 
     @staticmethod
     def _remove_non_image_paths(image_paths: List[str]) -> List[str]:
@@ -40,3 +30,12 @@ class DataLoader:
                 cleaned_image_paths.append(image_path)
 
         return cleaned_image_paths
+
+
+def filter_images_based_on_threshold(similar_images: SimilarImages, similarity_threshold: float) -> SimilarImages:
+    filtered_similar_images: SimilarImages = SimilarImages(similar_images=[])
+    for similar_image in similar_images.similar_images:
+        if similar_image.similarity_score >= similarity_threshold:
+            filtered_similar_images.similar_images.append(similar_image)
+
+    return filtered_similar_images
