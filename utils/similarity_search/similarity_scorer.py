@@ -1,5 +1,4 @@
 from collections import defaultdict
-import time
 from typing import List
 
 import streamlit as st
