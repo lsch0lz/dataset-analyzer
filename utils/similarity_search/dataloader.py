@@ -1,8 +1,10 @@
 import os
 import logging
-from typing import List
+from collections import defaultdict
+from heapq import nlargest
+from typing import List, Dict
 
-from utils.similarity_search.model import SimilarImages
+from utils.similarity_search.model import SimilarImages, SimilarImage, TopKSimilarImages
 from utils.similarity_search.similarity_scorer import SimilarityScorer
 
 logger = logging.getLogger(__name__)
@@ -45,3 +47,16 @@ def filter_images_based_on_threshold(similar_images: SimilarImages, similarity_t
             filtered_similar_images.similar_images.append(similar_image)
 
     return filtered_similar_images
+
+
+def find_top_k_image_pairs(filtered_similar_images: SimilarImages, top_k_image_pairs: int) -> SimilarImages:
+    top_k_similar_images_dict: Dict[str, List[SimilarImage]] = defaultdict(list)
+    for image in filtered_similar_images.similar_images:
+        top_k_similar_images_dict[image.image1_path].append(image)
+
+    top_k_similar_images_list = []
+    for image_path, images in top_k_similar_images_dict.items():
+        top_k = nlargest(top_k_image_pairs, images, key=lambda x: x.similarity_score)
+        top_k_similar_images_list.extend(top_k)
+
+    return SimilarImages(top_k_similar_images_list)
