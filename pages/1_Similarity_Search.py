@@ -1,6 +1,10 @@
+import logging
+
 import streamlit as st
 from utils.similarity_search.dataloader import DataLoader, filter_images_based_on_threshold
-from utils.similarity_search.model import SimilarImages
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 st.set_page_config(page_title="Similarity Search", page_icon="📈")
 
@@ -36,6 +40,7 @@ if submit_button_image_path:
 
 if st.session_state.similar_images is not None:
     filtered_images = filter_images_based_on_threshold(st.session_state.similar_images, similarity_threshold)
+    logger.info(f"Number of filtered ImagePairs: {len(filtered_images.similar_images)}")
     for similar_image in filtered_images.similar_images:
         with col1:
             st.image(similar_image.image1_path)

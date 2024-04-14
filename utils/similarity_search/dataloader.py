@@ -1,8 +1,12 @@
 import os
+import logging
 from typing import List
 
 from utils.similarity_search.model import SimilarImages
 from utils.similarity_search.similarity_scorer import SimilarityScorer
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 
 class DataLoader:
@@ -11,14 +15,16 @@ class DataLoader:
         self.similarity_threshold = similarity_threshold
 
     def get_similar_images(self) -> SimilarImages:
-        print("Loading Similar Images")
         image_paths: List = []
         for image in os.listdir(self.image_path):
             image_path: str = self.image_path + image
             image_paths.append(image_path)
 
         cleaned_image_paths: List[str] = self._remove_non_image_paths(image_paths)
+        logger.info(f"Number of Images in Dir: {len(cleaned_image_paths)}")
+
         similar_image_paths: SimilarImages = SimilarityScorer(cleaned_image_paths, self.similarity_threshold).get_images_w_similar_score()
+        logger.info(f"Number of ImagePairs: {len(similar_image_paths.similar_images)}")
 
         return similar_image_paths
 

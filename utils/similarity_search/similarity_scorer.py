@@ -21,7 +21,6 @@ class SimilarityScorer:
         self.progress_bar = st.progress(0, text="Computing Similarity")
 
     def get_images_w_similar_score(self):
-        start_time = time.time()
         similar_images: SimilarImages = SimilarImages(similar_images=[])
         for i in range(len(self.cleaned_image_paths)):
             self.progress_bar.progress(i + 1, text="Computing Similarity")
@@ -35,7 +34,6 @@ class SimilarityScorer:
                 similar_image: SimilarImage = SimilarImage(image1, image2, similarity)
                 similar_images.similar_images.append(similar_image)
 
-        print("--- %s seconds ---" % (time.time() - start_time))
         self.progress_bar.empty()
         return similar_images
 
