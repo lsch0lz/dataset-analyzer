@@ -34,7 +34,7 @@ with st.form("s3_path"):
     submit_button_image_path = st.form_submit_button("Import Images")
 
 similarity_threshold = st.sidebar.slider("Similarity Threshold", min_value=0.0, max_value=1.0, step=0.01, key="similarity_threshold")
-top_k_slider = st.sidebar.slider("Top-k Similar Images", min_value=5, max_value=1, step=1, key="top_k_slider")
+top_k_slider = st.sidebar.slider("Top-k Similar Images", min_value=10, max_value=1, step=1, key="top_k_slider")
 
 if submit_button_image_path:
     st.session_state.loaded_images = True
