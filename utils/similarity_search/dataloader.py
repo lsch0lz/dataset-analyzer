@@ -4,7 +4,7 @@ from collections import defaultdict
 from heapq import nlargest
 from typing import List, Dict
 
-from utils.similarity_search.model import SimilarImages, SimilarImage, TopKSimilarImages
+from utils.similarity_search.model import SimilarImages, SimilarImage
 from utils.similarity_search.similarity_scorer import SimilarityScorer
 
 logger = logging.getLogger(__name__)
